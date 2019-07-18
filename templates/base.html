@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{{title}}</title>
+        <style>
+            a {
+                margin: 10px;
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            li {
+                margin: 10px;
+            }
+
+        </style>
+    </head>
+<body>
+
+        <div>
+            <a href='/blog'>View All Posts</a>
+            <a href='/newpost'>Add a New Blogpost</a>
+        </div>
+
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>
