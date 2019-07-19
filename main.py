@@ -16,25 +16,40 @@ class Blog(db.Model):
     def __init__(self, title, body):
         self.title = title
         self.body = body
-       
+
+@app.route('/')
+def index():
+        return redirect('/blog')
+
+
+@app.route('/blog')
+def all_blogposts():
+    blogs = Blog.query.all()
+    return render_template('blog.html',title="My Blog!", blogs=blogs)
+
+
 @app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
     if request.method == 'POST':
         title = request.form['title']
         body = request.form['body']
-        new_post = Blog(title,body)
-        db.session.add(new_post)
-        db.session.commit()
-        return redirect('/')
+        if len(title) == 0 or len(body)==0:
+            return render_template('newpost.html')
+
+        else:
+            new_post = Blog(title,body)
+            db.session.add(new_post)
+            db.session.commit()
+            return redirect('/blogpost?id={}'.format(new_post.id))
         
     return render_template('newpost.html')
 
-@app.route('/')
-def index():
 
-    blogs = Blog.query.all()
-    return render_template('blog.html',title="My Blog!", 
-        blogs=blogs)
+@app.route('/blogpost')
+def single_blogpost():
+    blogpost_id = request.args.get('id')
+    blogpost = Blog.query.filter_by(id=blogpost_id).first()
+    return render_template('blogpost.html', blogpost=blogpost)
 
 
 if __name__ == '__main__':
